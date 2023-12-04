@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Creating an HTTP response header
+
+sudo apt-get update -y
+
+sudo apt-get install nginx -y
+
+echo 'Hello World!' > /var/www/html/index.html
+
+NEW_RULE="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/mohamedajjaji permanent;"
+sudo sed -i "s/server_name _;/$NEW_RULE/" /etc/nginx/sites-enabled/default
+
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+NEW_RULE1="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+
+sudo sed -i "s/listen 80 default_server;/$NEW_RULE1/" /etc/nginx/sites-enabled/default
+
+sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
+
+sudo nginx -t
+
+sudo service nginx restart
