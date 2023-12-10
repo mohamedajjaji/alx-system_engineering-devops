@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Debugging Bash Script for Ubuntu Nginx Port 80 Issue
 
-sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo sudo nginx -t
 sudo service nginx restart
