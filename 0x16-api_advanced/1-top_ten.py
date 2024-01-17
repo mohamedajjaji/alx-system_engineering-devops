@@ -15,8 +15,14 @@ def top_ten(subreddit):
     }
     response = requests.get(url, headers=headers, params=params,
                             allow_redirects=False)
-    if response.status_code == 404:
-        print("None")
-        return
-    results = response.json().get("data")
-    [print(c.get("data").get("title")) for c in results.get("children")]
+
+    try:
+        if response.status_code != 200:
+            print("None")
+            return
+        else:
+            results = response.json().get("data")
+            [print(c.get("data").get("title"))for c in results.get("children")]
+    except ValueError as e:
+        print("Error decoding JSON:", e)
+        return 0
